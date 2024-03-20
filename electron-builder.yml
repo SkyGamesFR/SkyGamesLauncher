@@ -1,51 +1,44 @@
-appId: 'skygameslauncher'
-productName: 'SkyGames Launcher'
-artifactName: '${productName}-setup-${version}.${ext}'
-
-copyright: 'Copyright © 2019-2024 SkyGames'
-
-asar: true
-compression: 'maximum'
-
-files:
-  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,.eslintrc.json}'
-
-extraResources:
-  - 'libraries'
-
-# Windows Configuration
-win:
-  target:
-    - target: 'nsis'
-      arch: 'x64'
-
-# Windows Installer Configuration
-nsis:
-  oneClick: false
-  perMachine: false
-  allowElevation: true
-  allowToChangeInstallationDirectory: true
-
-# macOS Configuration
-mac:
-  target:
-    - target: 'dmg'
-      arch:
-        - 'x64'
-        - 'arm64'
-  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
-  category: 'public.app-category.games'
-
-# Linux Configuration
-linux:
-  target: 'AppImage'
-  maintainer: 'SkyGames'
-  vendor: 'SkyGames'
-  synopsis: 'Modded Minecraft Launcher'
-  description: 'Custom launcher which allows users to join modded servers. All mods, configurations, and updates are handled automatically.'
-  category: 'Game'
-
-
+appId: fr.skygames.launcher
+productName: SkyGames Launcher
 directories:
-  buildResources: 'build'
-  output: 'dist'
+  buildResources: build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+asarUnpack:
+  - resources/**
+win:
+  executableName: SkyGamesLauncher
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  notarize: false
+dmg:
+  artifactName: ${name}-${version}.${ext}
+linux:
+  target:
+    - AppImage
+    - snap
+    - deb
+  maintainer: SkyGames
+  category: Game
+appImage:
+  artifactName: ${name}-${version}.${ext}
+npmRebuild: false
+publish:
+  provider: github
+  owner: SkyGamesFR
+  repo: SkyGamesLauncher

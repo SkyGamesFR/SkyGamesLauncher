@@ -1,0 +1,4 @@
+provider: github
+repo: SkyGamesLauncher
+owner: SkyGamesFR
+updaterCacheDirName: skygames-launcher-updater
